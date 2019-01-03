@@ -4,6 +4,7 @@ Object.assign(window.main, {
 })
 let ctx = window.main.getContext("2d"),
     renderlist = [],
+    runing = 0,
     start,
     key = {
         w: 0,
@@ -18,13 +19,18 @@ let ctx = window.main.getContext("2d"),
         coords: [window.main.width / 2 - 32, window.main.height / 2 - 32],
         date: new Date,
         def: 2,
+        hp: 100,
+        weapon: null,
+        armor: null,
+        medication: 0,
+        money: 0,
         flag: {
             move: new Date,
             attack: "",
-            heal: true
+            heal: true,
+            status: [0, 0, 0, 0, 0]
         },
-        hp: 100,
-        heal: function () { //  hp+2/s,cd 5s
+        heal: function() { //  hp+2/s,cd 5s
             this.flag.heal = false
             for (let n = 0; n < 5; n++) {
                 setTimeout(() => {
@@ -33,20 +39,18 @@ let ctx = window.main.getContext("2d"),
                 }, n * 1000)
             }
         },
-        img: [
-            new Image,
-            new Image,
-            new Image,
-            new Image
-            ],
+        img: [new Image, new Image, new Image, new Image],
         speed: 9,
-        status: 3, //0:being attacked，1：attacked，2：moveing，3：standby
-        init: function () {
+        status: 3, //0:being attacked，1：attacked，2：moveing，3：standby, 4:init
+        init: function() {
+            if (localStorage.hero) {
+                load()
+            }
             this.img.forEach((iteam, key) => {
                 iteam.src = `./img/Hero${key}.png`
             })
         },
-        move: function (control) {
+        move: function(control) {
             if (this.status > 1) {
                 let _x = (control.a + control.d),
                     _y = (control.w + control.s)
@@ -63,14 +67,14 @@ let ctx = window.main.getContext("2d"),
                     this.coords[0] += (this.coords[0] + x > window.main.width - 64) || (this.coords[0] + x <
                         0) ? 0 : x
                     this.coords[1] += (this.coords[1] + y > window.main.height - 64) || (this.coords[1] + y <
-                        0) ? 0  : y
+                        0) ? 0 : y
                     console.log("Hero", _dist, x, y, this.coords[0], this.coords[1])
                 } else {
                     this.status = 3
                 }
             }
         },
-        attack: function () {
+        attack: function() {
             // this.onmove = false
             if (new Date() - this.flag.attack > this.cd) {
                 this.flag.attack = new Date()
@@ -87,8 +91,8 @@ let ctx = window.main.getContext("2d"),
                             v.hp = _hp
                             clearTimeout(v.been_attacked) //防抖
                             v.been_attacked = setTimeout(() => {
-                                v.status = 3
-                            }, 800) //挨打状态持续800
+                                    v.status = 3
+                                }, 800) //挨打状态持续800
                         } else {
                             clearTimeout(v.been_attacked)
                             v.hp = 0
@@ -100,12 +104,15 @@ let ctx = window.main.getContext("2d"),
                 this.move(key)
             }
         },
-        action: function (time) {
+        action: function() {
+            if (key.h) {
+                Hero.flag.heal && Hero.heal()
+            }
             if (this.status > 1) {
                 if (key.k) {
-                    this.attack(time)
+                    this.attack()
                 } else {
-                    this.move(key, time)
+                    this.move(key)
                 }
             } else {
                 if (this.status == 0) {
@@ -126,20 +133,19 @@ function Monster(_) {
         move: "",
         attack: "",
         stanby: new Date,
-        status:[0,0,0,0]
+        status: [0, 0, 0, 0]
     }
     this.status = 3, //0:died，1：attacked，2：moveing，3：standby,4: init
         this.coords = [Math.random().toFixed(2) * (window.main.width - 64), Math.random().toFixed(2) * (window.main
             .height - 64)],
-        this.space = function () {
+        this.space = function() {
             let now = new Date(),
                 _symbol = this.coords[0] < Hero.coords[0] ? 1 : -1,
                 _temp = Math.sqrt(this.coords[0] ** 2 + this.coords[1] ** 2).toFixed(2),
                 _dist = this.speed * (now - this.date)
             return _symbol * (Hero.coords[0] - this.coords[0])
         }
-
-    this.attack = function () {
+    this.attack = function() {
         let x = (Hero.coords[0] - this.coords[0]) ** 2,
             y = (Hero.coords[1] - this.coords[1]) ** 2
         if (this.status == 2) {
@@ -147,7 +153,7 @@ function Monster(_) {
                 this.status = 1
                 this.flag.attack = new Date
                 Hero.status = 0
-                Hero.hp -= this.atk
+                Hero.hp -= this.atk - Hero.def
                 console.log("HP:", Hero.hp)
                 if (Hero.hp <= 0) {
                     setTimeout(stop, 0)
@@ -163,8 +169,10 @@ function Monster(_) {
         // if ((now - this.date) / 2 % 2 < 1) {}
         //move or attack
     }
+    this.init = function() {
 
-    this.action = function () {
+    }
+    this.action = function() {
         if (this.status > 1) {
             if (this.status == 3 && new Date() - this.flag.stanby > 2000) {
                 this.flag.move = new Date
@@ -193,28 +201,27 @@ function Monster(_) {
         }
     }
 
-    this.init=function () {
-        this.coords = [
-            Math.random().toFixed(2) * (window.main.width - 64),
-            Math.random().toFixed(2) * (window.main.height - 64)
-        ]
-        //duang!
-        this.status = 4
+    this.init = function() {
+        this.coords = [Math.random().toFixed(2) * (window.main.width - 64), Math.random().toFixed(2) * (window.main
+                .height - 64)]
+            //duang!
+        this.status = 5
+
     }
-    this.statuscontrol=function(_status){   //  eidt
-        switch(_status){
-            case 0: 
-                this.flag.status[_status]=new Date
-                this.status=_status
-                if(this.hp){
-                    setTimeout(()=>this.statuscontrol(1),800)
+    this.statuscontrol = function(_status) { //  eidt
+        switch (_status) {
+            case 0:
+                this.flag.status[_status] = new Date
+                this.status = _status
+                if (this.hp) {
+                    setTimeout(() => this.statuscontrol(1), 800)
                 }
                 return
             case 1:
-            
+
         }
     }
-    this._action = function () {
+    this._action = function() {
         let now = new Date()
         if (this.status == 2) {
             if ((now - this.date) / 2 % 2 < 1) {
@@ -229,18 +236,12 @@ function Monster(_) {
             }
         }
     }
-    this.img = [
-        new Image,
-        new Image,
-        new Image,
-        new Image,
-        new Image
-    ]
+    this.img = [new Image, new Image, new Image, new Image, new Image]
     this.img.forEach((v, i) => v.src = `${_.src}${i}.png`)
     return this
 }
 
-document.addEventListener("keydown", function (e) {
+document.addEventListener("keydown", function(e) {
     console.log(e.keyCode)
     switch (e.keyCode) {
         case 87:
@@ -265,7 +266,7 @@ document.addEventListener("keydown", function (e) {
             }
         case 49: //1
             {
-                Hero.flag.heal && Hero.heal()
+                runing && Hero.flag.heal && Hero.heal()
                 break
             }
         case 75: //k
@@ -276,7 +277,7 @@ document.addEventListener("keydown", function (e) {
     }
 })
 
-document.addEventListener("keyup", function (e) {
+document.addEventListener("keyup", function(e) {
     switch (e.keyCode) {
         case 87:
             {
@@ -309,12 +310,11 @@ document.addEventListener("keyup", function (e) {
 
 function main_refresh() {
     cancelAnimationFrame(start) //——_—— 防止多次requestAnimationFrame
-    let _date = new Date
     ctx.clearRect(0, 0, window.main.width, window.main.height)
-    //ctx.drawImage(Hero.img[Hero.status], Hero.coords[0], Hero.coords[1])
-    // renderlist.sort((a, b) => a.coords[1] - b.coords[1]) //排序
+        //ctx.drawImage(Hero.img[Hero.status], Hero.coords[0], Hero.coords[1])
+        // renderlist.sort((a, b) => a.coords[1] - b.coords[1]) //排序
     for (const a of renderlist) {
-        a.action(_date)
+        a.action()
         ctx.drawImage(a.img[a.status], ~~(a.coords[0]), ~~(a.coords[1]))
         ctx.fillText(a.hp, ~~(a.coords[0]) + 28, ~~(a.coords[1]) - 10)
     }
@@ -322,6 +322,7 @@ function main_refresh() {
     ctx.arc(Hero.coords[0] + 32, Hero.coords[1] + 32, 35, 0, 6.2832)
     ctx.stroke()
     start = requestAnimationFrame(main_refresh)
+    return runing = 1
 }
 
 function stop() {
@@ -332,9 +333,31 @@ function stop() {
             location.reload()
         }
     }
+    return runing = 0
 }
 
-window.onload = function () {
+function load() {
+    let hero = JSON.parse(localStorage.hero)
+    for (let i in hero) {
+        Hero[i] = hero[i]
+    }
+}
+
+function save() {
+    let hero = {
+        atk: Hero.atk,
+        cd: Hero.cd,
+        def: Hero.def,
+        hp: Hero.hp,
+        weapon: Hero.weapon,
+        armor: Hero.armor,
+        medication: Hero.medication,
+        money: Hero.money
+    }
+    localStorage.hero = JSON.stringify(hero)
+}
+
+window.onload = function() {
     let slime = {
         hp: 30,
         speed: 2,
@@ -344,7 +367,7 @@ window.onload = function () {
         src: "./img/slime"
     }
     Hero.init() //初始化英雄
-    // monster.init() //初始化怪物
+        // monster.init() //初始化怪物
     renderlist = Array.apply(0, { //初始化渲染列表
         length: 10
     }).map(() => new Monster(slime))

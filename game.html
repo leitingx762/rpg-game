@@ -13,10 +13,17 @@
 </head>
 
 <body>
-    <p style="position: absolute; display: block">"wasd"控制方向,"1"治疗,"K"攻击</p>
+    <div style="position: absolute;">
+        <button onclick="stop()">stop</button>
+        <button onclick="main_refresh()">start</button>
+        <button onclick="save()">save</button>
+        <button onclick="load()">load</button>
+        <button onclick="localStorage.clear()">clear</button>
+    </div>
     <canvas id="main">
     </canvas>
-    <script src="./game_main.js"></script>
+    <script src="./game_main.js">
+    </script>
 </body>
 
 </html>
