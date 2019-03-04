@@ -1,0 +1,147 @@
+body {
+  min-width: 1024px;
+  min-height: 600px;
+  margin: 0;
+  padding: 0;
+}
+
+pre {
+  font-size: 16px;
+  line-height: 1.5rem;
+  letter-spacing: 0.1rem;
+}
+
+.textwhite {
+  color: white;
+}
+
+.top-bar {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center
+}
+
+.top-bar>div {
+  margin: 1rem 3rem
+}
+
+#maincanvas {
+  border: 2px solid rgb(37, 228, 79);
+  /* top:12rem; */
+  position: absolute;
+  pointer-events: none;
+}
+
+.hide {
+  display: none !important;
+}
+
+.modal {
+  top: 0;
+  position: fixed;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.flex {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  color: #d2d2d2;
+  border: solid 2px rgb(55, 125, 255);
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 6rem 0.5rem rgba(55, 125, 255, 0.603);
+}
+
+.flex.msg {
+  padding: 1rem 3rem;
+  border-color: rgb(101, 235, 101);
+  box-shadow: 0 0 2rem 0.5rem rgba(101, 235, 101, 0.603);
+}
+
+.massage {
+  position: absolute;
+  top: 103px;
+  right: 0px;
+  /* transform: translate(-100%, 0); */
+}
+
+.menu {
+  justify-content: space-around;
+  background: rgba(0, 0, 0, 0.5);
+  width: 30rem;
+  height: 40rem;
+}
+
+.confirm {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.title {
+  margin: 1rem 3rem;
+}
+
+.box {
+  border: solid 1px;
+  border-radius: 1rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 15rem;
+  min-height: 8rem;
+  margin: 1rem 3rem;
+}
+
+.btn {
+  display: inline-block;
+  outline: none;
+  font-size: 1.2rem;
+  margin: 1rem 3rem;
+  width: 20rem;
+  height: 4rem;
+  line-height: 4rem;
+  text-align: center;
+  background: rgba(66, 141, 206, 0.95);
+  border: 2px solid rgba(255, 255, 255, 0.568);
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.64) 0px 0px 3rem 0.2rem inset;
+  color: white;
+}
+
+.btn.small {
+  width: 10rem;
+  height: 4rem;
+  line-height: 4rem;
+}
+
+.btn:hover {
+  background: rgba(9, 128, 39, 0.95);
+  border: 2px solid white;
+  box-shadow: rgba(101, 235, 101, 0.993) 0px 0px 3rem 0.1rem inset;
+}
+
+.btn.btn-warning {
+  background: rgba(224, 146, 29, 0.95);
+  box-shadow: rgba(158, 51, 9, 0.89) 0px 0px 4rem 0.2rem inset;
+}
+
+.btn.btn-warning:hover {
+  background: rgba(248, 46, 46, 0.95);
+  box-shadow: rgba(117, 8, 8, 0.9) 0px 0px 3rem 1rem inset;
+}

@@ -1,0 +1,31 @@
+{
+    "name": "rpg",
+    "version": "1.0.0",
+    "description": "史莱姆大战恐怖直立猿",
+    "main": "index.js",
+    "scripts": {
+        "test": "start"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/leitingx762/rpg-game.git"
+    },
+    "author": "leitingx762",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/leitingx762/rpg-game/issues"
+    },
+    "homepage": "https://github.com/leitingx762/rpg-game#readme",
+    "devDependencies": {
+        "@babel/core": "^7.3.3",
+        "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+        "@babel/plugin-transform-runtime": "^7.2.0",
+        "@babel/polyfill": "^7.2.5",
+        "@babel/preset-env": "^7.3.1",
+        "@babel/runtime": "^7.3.1",
+        "babel-loader": "^8.0.5",
+        "webpack": "^4.29.5",
+        "webpack-cli": "^3.2.3"
+    },
+    "dependencies": {}
+}

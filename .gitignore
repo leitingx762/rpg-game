@@ -1,1 +1,4 @@
-test_demo/
+node_modules/
+ignore/
+bin/
+.vscode/
