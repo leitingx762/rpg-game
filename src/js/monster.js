@@ -1,6 +1,7 @@
 function Monster(_) {
     Object.assign(this, _)
     this.date = new Date
+    this._img={}
     this.flag = {
         init: 0,
         hurt: 0,
@@ -14,19 +15,12 @@ function Monster(_) {
     return this
 }
 Monster.prototype = {
-    space() {
-        let now = new Date(),
-            _symbol = this.x < renderQueue[0].x ? 1 : -1,
-            _temp = Math.sqrt(this.x ** 2 + this.y ** 2).toFixed(2),
-            _dist = this.speed * (now - this.date)
-        return _symbol * (renderQueue[0].x - this.x)
-    },
     attack() {
         const hero = renderQueue[0]
         if (this.state === "move") {
             let _x = (hero.x - this.x) ** 2,
                 _y = (hero.y - this.y) ** 2
-            if (Math.sqrt(_x + _y).toFixed(2) < 65) {
+            if (Math.sqrt(_x + _y).toFixed(2) < this.rng) {
                 changeStatus(this, "attack")
                 changeStatus(hero, "hurt")
                 hero.hp -= this.atk - hero.def
@@ -34,37 +28,36 @@ Monster.prototype = {
                     hero.hp = 0
                     return window.stop()
                 }
-                changeStatus(this, "move", 500)
-                changeStatus(hero, "move", 500)
+                changeStatus(this, "move", this.time.attack)
+                changeStatus(hero, "move", hero.time.hurt)
 
             }
         }
-
         // if ((now - this.date) / 2 % 2 < 1) {}
         //move or attack
     },
     action() {
         if (
             this.state === "standby" &&
-            new Date - this.flag["standby"] > 2000
+            new Date - this.flag["standby"] > this.time.standby
         ) {
             changeStatus(this, "move")
-            setTimeout(() => {
-                if (this.state !== "hurt" || "init") {
-                    changeStatus(this, "standby")
+            setTimeout(she => {
+                if (she.state !== "hurt" || "init") {
+                    changeStatus(she, "standby")
                 }
-            }, 2000)
+            }, this.time.move, this)
         }
         if (this.state === "move") {
-            if (new Date - this.flag["move"] > 2000) {
+            if (new Date - this.flag["move"] > this.time.move) {
                 changeStatus(this, "standby")
             }
             let _x = renderQueue[0].x - this.x,
                 _y = renderQueue[0].y - this.y,
-                _temp = Math.sqrt(_x ** 2 + _y ** 2).toFixed(2)
-            if (_temp > 60 || new Date() - this.flag["attack"] < 800) {
-                let x = ~~((this.speed / _temp) * _x),
-                    y = ~~((this.speed / _temp) * _y)
+                distance = Math.sqrt(_x ** 2 + _y ** 2).toFixed(2)
+            if (distance > this.rng || new Date() - this.flag["attack"] < this.cd) {
+                let x = ~~((this.speed / distance) * _x),
+                    y = ~~((this.speed / distance) * _y)
                 // log("monster", x, y)
                 this.x += x
                 this.y += y
@@ -72,15 +65,18 @@ Monster.prototype = {
                 this.attack()
             }
         }
+        this._img.sx = 0
+        this._img.sy = state[this.state] * 128
     },
 
     init() {
         this.x = +Math.random().toFixed(2) * (document.querySelector("#maincanvas").width - 64)
         this.y = +Math.random().toFixed(2) * (document.querySelector("#maincanvas").height - 64)
         this.hp = this.$hp
+        this._img.src=this.img
         //duang!
         changeStatus(this, "init")
-        changeStatus(this, "move", 3000)
+        changeStatus(this, "move", this.time.init)
         return this
     }
 }

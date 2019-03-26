@@ -1,8 +1,15 @@
+@keyframes msgopen{
+  0% {
+    right: -10rem;
+  }
+}
+
 body {
   min-width: 1024px;
   min-height: 600px;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 pre {
@@ -18,9 +25,18 @@ pre {
 .top-bar {
   position: absolute;
   width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row;
   flex-flow: row;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center
 }
 
@@ -33,6 +49,7 @@ pre {
   /* top:12rem; */
   position: absolute;
   pointer-events: none;
+  background:url("../img/portal.png") no-repeat right bottom
 }
 
 .hide {
@@ -42,9 +59,18 @@ pre {
 .modal {
   top: 0;
   position: fixed;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: column nowrap;
   flex-flow: column nowrap;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   z-index: 999;
   width: 100%;
@@ -53,31 +79,49 @@ pre {
 }
 
 .flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: column nowrap;
   flex-flow: column nowrap;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
   color: #d2d2d2;
   border: solid 2px rgb(55, 125, 255);
   border-radius: 1rem;
   background: rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 6rem 0.5rem rgba(55, 125, 255, 0.603);
   box-shadow: 0 0 6rem 0.5rem rgba(55, 125, 255, 0.603);
 }
 
 .flex.msg {
   padding: 1rem 3rem;
   border-color: rgb(101, 235, 101);
+  -webkit-box-shadow: 0 0 2rem 0.5rem rgba(101, 235, 101, 0.603);
   box-shadow: 0 0 2rem 0.5rem rgba(101, 235, 101, 0.603);
 }
 
 .massage {
+  animation:msgopen 1s ;
+  animation-timing-function:linear;
   position: absolute;
-  top: 103px;
-  right: 0px;
+  overflow:auto;
+  word-wrap: normal;
+  top: 8rem;
+  width: 10rem;
+  height:10rem;
+  right: 0;
   /* transform: translate(-100%, 0); */
 }
 
 .menu {
+  -ms-flex-pack: distribute;
   justify-content: space-around;
   background: rgba(0, 0, 0, 0.5);
   width: 30rem;
@@ -100,8 +144,14 @@ pre {
 }
 
 .content {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
   min-width: 15rem;
   min-height: 8rem;
@@ -120,6 +170,7 @@ pre {
   background: rgba(66, 141, 206, 0.95);
   border: 2px solid rgba(255, 255, 255, 0.568);
   border-radius: 20px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.64) 0px 0px 3rem 0.2rem inset;
   box-shadow: rgba(0, 0, 0, 0.64) 0px 0px 3rem 0.2rem inset;
   color: white;
 }
@@ -133,15 +184,18 @@ pre {
 .btn:hover {
   background: rgba(9, 128, 39, 0.95);
   border: 2px solid white;
+  -webkit-box-shadow: rgba(101, 235, 101, 0.993) 0px 0px 3rem 0.1rem inset;
   box-shadow: rgba(101, 235, 101, 0.993) 0px 0px 3rem 0.1rem inset;
 }
 
 .btn.btn-warning {
   background: rgba(224, 146, 29, 0.95);
+  -webkit-box-shadow: rgba(158, 51, 9, 0.89) 0px 0px 4rem 0.2rem inset;
   box-shadow: rgba(158, 51, 9, 0.89) 0px 0px 4rem 0.2rem inset;
 }
 
 .btn.btn-warning:hover {
   background: rgba(248, 46, 46, 0.95);
+  -webkit-box-shadow: rgba(117, 8, 8, 0.9) 0px 0px 3rem 1rem inset;
   box-shadow: rgba(117, 8, 8, 0.9) 0px 0px 3rem 1rem inset;
 }

@@ -1,7 +1,7 @@
 /*
 Object.assign(main, {
     width: document.body.clientWidth,
-    height: 0.96 * document.documentElement.clientHeight
+    height: 0.96 * document.body.clientHeight
 })
 */
 
@@ -14,9 +14,13 @@ function render(obj, x, y) {
       ok(backctx.drawImage(img, x || obj.x || 0, y || obj.y || 0))
     img.src = `./img/${obj.src || obj}`
     setTimeout(() => {
-      err(new Error(`${img.src} 加载失败`))
-    }, 2000)
+      err(new Error(`${img.src} 加载超时，转入后台`))
+    }, 5000)
   }).catch(msg => window.console.error("喵", msg))
+}
+
+function Render(img, x, y) {
+  mainctx.drawImage(img.src, img.sx, img.sy, 138, 128, x, y, 138, 128)
 }
 
 function mainStart() {
@@ -25,22 +29,23 @@ function mainStart() {
   mainctx.fillStyle = "#ffffff"
   //ctx.drawImage(Hero.img[Hero.state], Hero.x, Hero.y)
   // renderQueue.sort((a, b) => a.y - b.y) //排序
-  if (Hero.hp) {
+  if (runing && Hero.hp) {
     for (const a of renderQueue) {
       a.action()
     }
   }
   for (const a of renderQueue) {
-    mainctx.drawImage(a.img[state[a.state]], a.x, a.y)
+    Render(a._img, a.x, a.y)
+    // mainctx.drawImage(a.img[state[a.state]], a.x, a.y)
     mainctx.fillText(a.hp, a.x + 28, a.y - 10)
   }
   mainctx.beginPath()
-  mainctx.arc(Hero.x + 32, Hero.y + 32, 35, 0, 6.28)
+  mainctx.arc(Hero.x + 55, Hero.y + 60, 64, 0, 6.28)
   mainctx.stroke()
-  if (!(/hide/).test(document.querySelector(".modal").className)) {
-    return
+  if (!/hide/.test(document.querySelector(".modal").className)) {
+    return runing = 0
   }
-  if (!Hero.hp) {
+  if (!(Hero.hp && runing)) {
     stop()
     return runing = 0
   }
@@ -72,31 +77,24 @@ function pause() {
   modal.menu(true)
   modal.open()
   mainStop()
-  return sel(".modal").addEventListener = ("keydown", e => {
-    console.log("23333", e.key)
-    if (e.key == "Escape") {
-      modal.menu(false)
-      modal.close()
-    }
-  })
 }
 
 function resume() {
+  runing = 1
   modal.menu(false)
   modal.close()
   mainStart()
 }
 
 window.onload = async function (flag = 0) {
+  let _width = document.documentElement.clientWidth,
+    _height = document.documentElement.clientHeight
   modal.close()
   modal.menu(false)
-  portal.x = 0.99 * document.documentElement.clientWidth - 233
-  portal.y = 0.99 * document.documentElement.clientHeight - 350
+  portal.x = _width - 321
+  portal.y = _height - 252
   renderQueue = [];
-  [main.width, main.height] = [back.width, back.height] = [
-    0.99 * document.documentElement.clientWidth,
-    0.985 * document.documentElement.clientHeight
-  ]
+  [main.width, main.height] = [back.width, back.height] = [_width, _height]
   Hero.init() //初始化英雄
   if (flag == "dungeon") {
     //副本场景初始化怪物
@@ -104,20 +102,30 @@ window.onload = async function (flag = 0) {
       $hp: 60,
       speed: 2,
       atk: 10,
+      cd: 800,
       def: 0,
-      cd: 2000,
+      rng: 65,
+      time: {
+        init: 2000,
+        hurt: 600,
+        move: 2000,
+        attack: 600,
+        standby: 1000
+      },
       src: "slime"
     }
-    Monster.prototype.img = Array.from({
-        //怪物贴图挂在原型里，省资源
-        length: 5
-      },
-      (v, i) => {
-        const img = new Image()
-        img.src = `./img/${slime.src}${i}.png`
-        return img
-      }
-    )
+    // Monster.prototype.img = Array.from({
+    //     //怪物贴图挂在原型里，省资源
+    //     length: 5
+    //   },
+    //   (v, i) => {
+    //     const img = new Image()
+    //     img.src = `./img/${slime.src}${i}.png`
+    //     return img
+    //   }
+    // )
+    Monster.prototype.img= loadImg("slime")
+
     renderQueue = Array.from({
         length: 10
       },
@@ -126,11 +134,12 @@ window.onload = async function (flag = 0) {
     await render("dungeon.jpg") //副本背景
   } else {
     await render("background.jpg") //主城背景
-    render("NPC1.png", 10, back.height*0.6) //药店
+    render("NPC1.png", 10, back.height * 0.6) //药店
     render("NPC2.png", 10, back.height * 0.8) //装备店
   }
-  render(portal) //传送门
+  sel(".top-bar div:nth-child(2)").innerText = `血瓶:${Hero.medication}`
   renderQueue.unshift(Hero)
+  runing = 1
   start = requestAnimationFrame(mainStart) //启动画布
 }
 sel("#option").onclick = pause
@@ -145,7 +154,7 @@ sel(".menu .btn")[1].onclick = () => {
     modal.close()
     modal.msg(false)
     mainStart()
-  }, 1500)
+  }, 800)
 }
 
 sel(".menu .btn")[2].onclick = window.onload
@@ -158,6 +167,6 @@ sel(".menu .btn")[3].onclick = () => {
     modal.msg(true, "存档已删除！")
     setTimeout(() => {
       location.reload()
-    }, 1000)
+    }, 600)
   })
 }
