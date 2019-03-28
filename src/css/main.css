@@ -237,7 +237,6 @@ pre {
 }
 
 .mask {
-    opacity: 0.3;
     position: absolute;
     z-index: 5;
     width: 100%;
