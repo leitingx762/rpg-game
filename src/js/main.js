@@ -20,7 +20,7 @@ function renders(obj, x, y) { //旧版
 }
 
 function render(obj, x, y) {
-    if (obj.complete) {
+    if (obj) {
         backctx.drawImage(obj, x || 0, y || 0)
     }
 }
