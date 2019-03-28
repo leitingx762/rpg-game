@@ -146,7 +146,7 @@ window.onload = async function (flag = 0) {
             () => new Monster(slime).init()
         )
     } else {
-        cityback = await loadBack("background")
+        cityback = cityback || await loadBack("background")
         render(cityback)
         npc1 = npc1 || await loadBack("npc1")
         render(npc1, 10, back.height * 0.6) //药店
