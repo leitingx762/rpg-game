@@ -1,7 +1,7 @@
 function Monster(_) {
     Object.assign(this, _)
     this.date = new Date
-    this._img={}
+    this._img = {}
     this.flag = {
         init: 0,
         hurt: 0,
@@ -16,7 +16,7 @@ function Monster(_) {
 }
 Monster.prototype = {
     attack() {
-        const hero = renderQueue[0]
+        const hero = Hero
         if (this.state === "move") {
             let _x = (hero.x - this.x) ** 2,
                 _y = (hero.y - this.y) ** 2
@@ -26,6 +26,7 @@ Monster.prototype = {
                 hero.hp -= this.atk - hero.def
                 if (hero.hp <= 0) {
                     hero.hp = 0
+                    mainStop()
                     return window.stop()
                 }
                 changeStatus(this, "move", this.time.attack)
@@ -52,8 +53,8 @@ Monster.prototype = {
             if (new Date - this.flag["move"] > this.time.move) {
                 changeStatus(this, "standby")
             }
-            let _x = renderQueue[0].x - this.x,
-                _y = renderQueue[0].y - this.y,
+            let _x = Hero.x - this.x,
+                _y = Hero.y - this.y,
                 distance = Math.sqrt(_x ** 2 + _y ** 2).toFixed(2)
             if (distance > this.rng || new Date() - this.flag["attack"] < this.cd) {
                 let x = ~~((this.speed / distance) * _x),
@@ -73,7 +74,7 @@ Monster.prototype = {
         this.x = +Math.random().toFixed(2) * (document.querySelector("#maincanvas").width - 64)
         this.y = +Math.random().toFixed(2) * (document.querySelector("#maincanvas").height - 64)
         this.hp = this.$hp
-        this._img.src=this.img
+        this._img.src = this.img
         //duang!
         changeStatus(this, "init")
         changeStatus(this, "move", this.time.init)

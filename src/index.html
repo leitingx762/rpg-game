@@ -2,63 +2,74 @@
 <html lang="zh-cn">
 
 <head>
-  <title>史莱姆大战恐怖直立猿</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta name="x5-fullscreen" content="true">
-  <meta name="x5-orientation" content="andscape">
-  <link rel="stylesheet" href="./css/main.css" />
+    <title>史莱姆大战恐怖直立猿</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="x5-orientation" content="andscape">
+    <link rel="stylesheet" href="./css/main.css" />
 </head>
 
 <body>
-  <div class="top-bar">
-    <div>头像</div>
-    <div>血瓶:</div>
-    <div>武器</div>
-    <div>防具</div>
-    <button id="option" class="btn small">
-      菜单选项
-    </button>
-  </div>
-  <canvas id="maincanvas">
-    <p>此浏览器不支持canvas，换个浏览器试试吧~（PS:兼容模式请切换到高速模式试试） </p>
-  </canvas>
-  <canvas id="backcanvas"></canvas>
-  <div class="modal hide">
-    <div class="flex menu hide">
-      <h2 class="title">主菜单</h2>
-      <button class="btn">继续游戏</button>
-      <button class="btn">保存游戏</button>
-      <button class="btn">载入存档</button>
-      <br />
-      <button class="btn btn-warning">删档重开</button>
+    <div class="mask">
+        <div class="loading">
+            <div class="circl">
+            </div>
+        </div>
+        <p>
+            <span>10</span><span>%</span><br>
+            Loading...
+        </p>
     </div>
-    <div class="flex confirm hide">
-      <h2 class="title">确认操作</h2>
-      <div>
-        <div class="content box ">
-          <pre>
+    <div class="top-bar">
+        <div>头像</div>
+        <div>血瓶:</div>
+        <div>武器</div>
+        <div>防具</div>
+        <button id="option" class="btn small">
+            菜单选项
+        </button>
+    </div>
+    <canvas id="maincanvas">
+        <p>此浏览器不支持canvas，换个浏览器试试吧~（PS:兼容模式请切换到高速模式试试） </p>
+    </canvas>
+    <canvas id="backcanvas"></canvas>
+    <div class="modal hide">
+        <div class="flex menu hide">
+            <h2 class="title">主菜单</h2>
+            <button class="btn">继续游戏</button>
+            <button class="btn">保存游戏</button>
+            <button class="btn">载入存档</button>
+            <br />
+            <button class="btn btn-warning">删档重开</button>
+        </div>
+        <div class="flex confirm hide">
+            <h2 class="title">确认操作</h2>
+            <div>
+                <div class="content box ">
+                    <pre>
 _(:3ゝ∠)_大侠你凉了呢
 胜败乃兵家常事，读档吗？
           </pre>
+                </div>
+                <div>
+                    <button class="btn btn-warning small">确定</button>
+                    <button class="btn small">取消</button>
+                </div>
+            </div>
         </div>
-        <div>
-          <button class="btn btn-warning small">确定</button>
-          <button class="btn small">取消</button>
+        <div class="flex content msg hide">
+            <p>存档已删除</p>
         </div>
-      </div>
     </div>
-    <div class="flex content msg hide">
-      <p>存档已删除</p>
+    <div class="massage flex msg hide">
+        <pre></pre>
     </div>
-  </div>
-  <div class="massage flex msg hide">
-    <pre></pre>
-  </div>
-  <script src="./js/global.js"></script>
-  <script src="./js/Hero.js"></script>
-  <script src="./js/monster.js"></script>
-  <script src="./js/main.js"></script>
+    <script src="./js/global.js"></script>
+    <script src="./js/Hero.js"></script>
+    <script src="./js/monster.js"></script>
+    <script src="./js/main.js"></script>
 </body>
 
 </html>

@@ -63,7 +63,6 @@ const key = {
             //   this.img.forEach((item, key) => {
             //     item.src = `./img/Hero${key}.png`
             //   })
-            this._img.src = loadImg("hero")
         },
         move(control) {
             if (this.state === "move" || this.state === "standby") {
@@ -89,6 +88,9 @@ const key = {
                 this.y += this.y + y > main.height - 128 || this.y + y < 128 ? 0 : y
                 //console.log("Hero", _speed, x, y, this.x, this.y)
                 if (Math.sqrt((this.x - portal.x - 100) ** 2 + (this.y - portal.y - 46) ** 2) < 60) { //传送
+                    mainStop()
+                    progress = 40
+                    sel(".mask").classList.remove("hide")
                     this.save("自动保存~")
                     if (renderQueue.length > 2) { //回城
                         return window.onload("city")
@@ -96,7 +98,6 @@ const key = {
                     window.onload("dungeon") //副本
                 }
             }
-            console.log(this._img.flag)
         },
         attack() {
             const _this = this
@@ -118,8 +119,8 @@ const key = {
                         if (_x < 0 || _x > this.rng) {
                             return
                         }
-                        const _y = v.y - this.y - 10
-                        if (_y < 0 || _y > this.rng - 35) {
+                        const _y = v.y - this.y + 20
+                        if (_y < 0 || _y > this.rng - 20) {
                             return
                         }
                         changeStatus(v, "hurt")
@@ -195,7 +196,7 @@ const key = {
         }
     }
 document.addEventListener("keydown", function (e) {
-    console.log(e.key)
+    // console.log(e.key)
     if (e.key == "1") {
         runing && Hero.flag.heal && Hero.heal()
         return
