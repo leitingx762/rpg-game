@@ -9,9 +9,10 @@ function Monster(_) {
         move: 0,
         attack: 0,
     }
+    this.level = 0
     this.state = "init" //-1:init, 0:hurt，1：attacked，2：moveing，3：standby,
-    this.x = Math.random().toFixed(2) * (main.width - 64)
-    this.y = Math.random().toFixed(2) * (main.height - 64)
+    this.x = Math.random().toFixed(2) * (main.width - offsetX / 2)
+    this.y = Math.random().toFixed(2) * (main.height - offsetY / 2)
     return this
 }
 Monster.prototype = {
@@ -21,9 +22,10 @@ Monster.prototype = {
             let _x = (hero.x - this.x) ** 2,
                 _y = (hero.y - this.y) ** 2
             if (Math.sqrt(_x + _y).toFixed(2) < this.rng) {
+                const _hp = this.atk - hero.def - (hero.level - 1) * 2
                 changeStatus(this, "attack")
                 changeStatus(hero, "hurt")
-                hero.hp -= this.atk - hero.def
+                hero.hp -= _hp > 0 ? _hp : 1
                 if (hero.hp <= 0) {
                     hero.hp = 0
                     mainStop()
@@ -49,7 +51,7 @@ Monster.prototype = {
                 }
             }, this.time.move, this)
         }
-        if (this.state === "move") {
+        if (this.state === "move" && this.hp) {
             if (new Date - this.flag["move"] > this.time.move) {
                 changeStatus(this, "standby")
             }
@@ -67,13 +69,16 @@ Monster.prototype = {
             }
         }
         this._img.sx = 0
-        this._img.sy = state[this.state] * 128
+        this._img.sy = state[this.state] * offsetY
     },
 
     init() {
-        this.x = +Math.random().toFixed(2) * (document.querySelector("#maincanvas").width - 64)
-        this.y = +Math.random().toFixed(2) * (document.querySelector("#maincanvas").height - 64)
-        this.hp = this.$hp
+        ++this.level
+        this.x = +Math.random().toFixed(2) * (document.querySelector("#maincanvas").width - offsetX / 2)
+        this.y = +Math.random().toFixed(2) * (document.querySelector("#maincanvas").height - offsetY / 2)
+        this.hp = this.$hp + (this.level - 1) * 5
+        this.atk += (this.level - 1) * 2
+        this.def += this.level - 1
         this._img.src = this.img
         //duang!
         changeStatus(this, "init")

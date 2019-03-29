@@ -26,7 +26,7 @@ function render(obj, x, y) {
 }
 
 function Render(img, x, y) {
-    mainctx.drawImage(img.src, img.sx, img.sy, 138, 128, x, y, 138, 128)
+    mainctx.drawImage(img.src, img.sx, img.sy, offsetX, offsetY, x - offsetX / 2, y - offsetY / 2, offsetX, offsetY)
 }
 
 function mainStart() {
@@ -44,10 +44,11 @@ function mainStart() {
         for (const a of renderQueue) {
             Render(a._img, a.x, a.y)
             // mainctx.drawImage(a.img[state[a.state]], a.x, a.y)
-            mainctx.fillText(a.hp, a.x + 48, a.y - 10)
+            mainctx.fillText(`Level: ${a.level}`, a.x - 35, a.y - offsetY / 2 - 10)
+            mainctx.fillText(a.hp, a.x + 15, a.y - offsetY / 2 - 10)
         }
         mainctx.beginPath()
-        mainctx.arc(Hero.x + 55, Hero.y + 60, 64, 0, 6.28)
+        mainctx.arc(Hero.x, Hero.y, 64, 0, 6.28)
         mainctx.stroke()
         if (!/hide/.test(document.querySelector(".modal").className)) {
             return runing = 0
@@ -101,8 +102,8 @@ window.onload = async function (flag = 0) {
         _height = document.documentElement.clientHeight
     modal.close()
     modal.menu(false)
-    portal.x = _width - 321
-    portal.y = _height - 252
+    portal.x = _width - 166
+    portal.y = _height - 138
     renderQueue = [];
     [main.width, main.height] = [back.width, back.height] = [_width, _height]
     //加载图片
@@ -154,6 +155,9 @@ window.onload = async function (flag = 0) {
         render(npc2, 10, back.height * 0.8) //装备店
     }
     sel(".top-bar div:nth-child(2)").innerText = `血瓶:${Hero.medication}`
+    sel(".info p span")[0].innerText = Hero.level
+    sel(".info p span")[1].innerText = Hero.exp
+    sel(".info p span")[2].innerText = Hero.money
     renderQueue.unshift(Hero)
     runing = 1
     sel(".mask").classList.add("hide")

@@ -9,8 +9,10 @@ const key = {
     Hero = {
         atk: 10,
         cd: 500,
-        x: document.documentElement.clientWidth / 2 - 32,
-        y: document.documentElement.clientHeight / 2 - 32,
+        exp: 0,
+        level: 1,
+        x: (document.documentElement.clientWidth - offsetX) / 2,
+        y: (document.documentElement.clientHeight - offsetY) / 2,
         date: new Date,
         direction: 1,
         def: 2,
@@ -50,15 +52,15 @@ const key = {
             sel(".top-bar div:nth-child(2)").innerText = `血瓶:${Hero.medication}`
             for (let n = 0; n < 5; n++) {
                 setTimeout(she => {
-                    she.hp < 99 ? (she.hp += 2) : (she.hp = 100)
+                    she.hp < she.$hp + (she.level - 1) * 10 ? (she.hp += 2) : (she.hp = she.$hp + (she.level - 1) * 10)
                     n === 4 && (she.flag.heal = true)
                 }, n * 1000, this)
             }
         },
         init() {
             changeStatus(this, "standby")
-            this.x = document.documentElement.clientWidth / 2 - 32
-            this.y = document.documentElement.clientHeight / 2 - 32
+            this.x = (document.documentElement.clientWidth - offsetX) / 2
+            this.y = (document.documentElement.clientHeight - offsetY) / 2
             this.load()
             //   this.img.forEach((item, key) => {
             //     item.src = `./img/Hero${key}.png`
@@ -84,10 +86,10 @@ const key = {
                 const x = _speed * _x,
                     y = _speed * _y
                 changeStatus(this, "move")
-                this.x += this.x + x > main.width - 90 || this.x + x < 0 ? 0 : x
-                this.y += this.y + y > main.height - 128 || this.y + y < 128 ? 0 : y
+                this.x += this.x + x > main.width - offsetX / 2 || this.x + x < offsetX / 2 ? 0 : x
+                this.y += this.y + y > main.height - offsetY / 2 || this.y + y < offsetY / 2 ? 0 : y
                 //console.log("Hero", _speed, x, y, this.x, this.y)
-                if (Math.sqrt((this.x - portal.x - 100) ** 2 + (this.y - portal.y - 46) ** 2) < 60) { //传送
+                if (Math.sqrt((this.x - portal.x) ** 2 + (this.y - portal.y) ** 2) < 60) { //传送
                     mainStop()
                     progress = 40
                     sel(".mask").classList.remove("hide")
@@ -115,7 +117,7 @@ const key = {
                         return
                     }
                     if (v.state !== "init" && v.hp > 0) { //跳过init和died的怪
-                        const _x = this.direction * (v.x - this.x - 15 * (1 + this.direction))
+                        const _x = this.direction * (v.x - this.x)
                         if (_x < 0 || _x > this.rng) {
                             return
                         }
@@ -124,7 +126,7 @@ const key = {
                             return
                         }
                         changeStatus(v, "hurt")
-                        const _hp = v.hp - this.atk + v.def
+                        const _hp = v.hp - this.atk - (this.level - 1) * 5 + v.def
                         if (_hp > 0) {
                             v.hp = _hp
                             changeStatus(v, "move", v.time.move)
@@ -137,6 +139,14 @@ const key = {
                             // clearTimeout(v.been_attacked)
                             v.hp = 0
                             this.money += 10
+                            this.exp += 10
+                            if (this.exp >= 100) {
+                                this.level += 1
+                                this.exp -= 100
+                            }
+                            sel(".info p span")[0].innerText = this.level
+                            sel(".info p span")[1].innerText = this.exp
+                            sel(".info p span")[2].innerText = this.money
                             setTimeout(she => {
                                 she.init()
                             }, v.time.init, v)
@@ -159,12 +169,12 @@ const key = {
             }
             if (this.state === "move") {
                 const x = ~~(((this.date - this._img.flag) / 50) % 10)
-                this._img.sx = 1311 + this.direction * 69 * (1 + 2 * x)
+                this._img.sx = 1311 + this.direction * offsetX / 2 * (1 + 2 * x)
                 // console.log(this.direction,this._img.sx,x)
             } else {
-                this._img.sx = 1311 + this.direction * 69
+                this._img.sx = 1311 + this.direction * offsetX / 2
             }
-            this._img.sy = state[this.state] * 128
+            this._img.sy = state[this.state] * offsetY
         },
         load(msg) {
             if (window.localStorage && localStorage.hero) {
@@ -187,7 +197,9 @@ const key = {
                     weapon: this.weapon,
                     armor: this.armor,
                     medication: this.medication,
-                    money: this.money
+                    money: this.money,
+                    exp: this.exp,
+                    evel: this.evel
                 }
                 Massage(msg)
                 return localStorage.hero = JSON.stringify(hero)

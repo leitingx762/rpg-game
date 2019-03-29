@@ -1,12 +1,32 @@
 @-webkit-keyframes msgopen {
     0% {
-        right: -10rem;
+        opacity: 1;
+        right: -15rem
+    }
+
+    30% {
+        opacity: 1;
+        right: 0
+    }
+
+    90% {
+        opacity: 1;
     }
 }
 
 @keyframes msgopen {
     0% {
-        right: -10rem;
+        opacity: 1;
+        right: -15rem
+    }
+
+    30% {
+        opacity: 1;
+        right: 0
+    }
+
+    90% {
+        opacity: 1;
     }
 }
 
@@ -39,7 +59,7 @@ body {
 }
 
 canvas {
-    background:darkgray;
+    background: darkgray;
 }
 
 pre {
@@ -137,23 +157,25 @@ pre {
     box-shadow: 0 0 2rem 0.5rem rgba(101, 235, 101, 0.603);
 }
 
-.massage {
-    -webkit-animation: msgopen 1s;
-    animation: msgopen 1s;
+.massage.flex.msg {
+    -webkit-animation: msgopen 2s;
+    animation: msgopen 2s;
     -webkit-animation-timing-function: linear;
     animation-timing-function: linear;
     position: absolute;
     overflow: auto;
     word-wrap: normal;
     top: 8rem;
-    width: 10rem;
+    width: 15rem;
     height: 10rem;
     right: 0;
-    /* transform: translate(-100%, 0); */
+    padding: 1rem;
+    word-break: break-all;
+    opacity: 0;
 }
 
-.hide:hover {
-    display:block
+.massage.flex.msg:hover {
+    opacity: 1;
 }
 
 .menu {

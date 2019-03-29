@@ -1,4 +1,6 @@
-const main = document.querySelector("#maincanvas"),
+const offsetX = 138,
+    offsetY = 128,
+    main = document.querySelector("#maincanvas"),
     mainctx = main.getContext("2d"),
     back = document.querySelector("#backcanvas"),
     backctx = back.getContext("2d"),
@@ -10,22 +12,21 @@ const main = document.querySelector("#maincanvas"),
         init: 4
     },
     portal = {
-        x: document.documentElement.clientWidth - 321,
-        y: document.documentElement.clientHeight - 252
+        x: document.documentElement.clientWidth - 166,
+        y: document.documentElement.clientHeight - 138
     },
     sel = (Selector) => {
         const list = document.querySelectorAll(Selector)
         return list.length === 1 ? list[0] : list
     },
     Massage = (msg) => {
+
         if (msg) {
-            const ele = sel(".massage"),
+            let ele = sel(".massage"),
                 date = new Date
-            sel(".massage pre").innerHTML += `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} ${msg}\n`
-            if (/hide/.test(ele.className)) {
-                ele.classList.remove("hide")
-                setTimeout(_ => ele.classList.add("hide"), 2500)
-            }
+            ele.classList.remove("msg")
+            sel(".massage p").innerHTML += `<br>${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} - ${msg}`
+            setTimeout(() => ele.classList.add("msg"), 0)
         }
     },
     changeStatus = (target, _state, time) => {
